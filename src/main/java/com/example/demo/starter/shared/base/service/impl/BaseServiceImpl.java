@@ -44,7 +44,7 @@ public abstract class BaseServiceImpl<T extends BaseEntity, D extends BaseDto> i
 
     public ServiceResponse<D> update(D dto, UUID id) {
         T entity = repository.findById(id).orElseThrow(() -> new NotFoundException("Not found"));
-        updateEntity(dto, entity);
+        entity = mapper.toEntity(dto);
         repository.save(entity);
         return ServiceResponse.success(dto, 200);
     }
@@ -55,6 +55,4 @@ public abstract class BaseServiceImpl<T extends BaseEntity, D extends BaseDto> i
         repository.save(entity);
         return ServiceResponse.success(204);
     }
-
-    protected abstract void updateEntity(D dto, T entity);
 }

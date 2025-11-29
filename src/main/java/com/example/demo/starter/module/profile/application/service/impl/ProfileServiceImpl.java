@@ -38,9 +38,4 @@ public class ProfileServiceImpl extends BaseServiceImpl<Profile, ProfileDto> imp
         Profile created = repository.save(profile);
         return ServiceResponse.success(mapper.toDto(created), 200);
     }
-
-    @Override
-    protected void updateEntity(ProfileDto dto, Profile entity) {
-
-    }
 }

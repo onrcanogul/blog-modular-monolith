@@ -5,7 +5,6 @@ import com.example.demo.starter.module.article.application.service.ArticleServic
 import com.example.demo.starter.module.article.domain.entity.Article;
 import com.example.demo.starter.module.article.infrastructure.repository.ArticleRepository;
 import com.example.demo.starter.shared.base.configuration.mapper.Mapper;
-import com.example.demo.starter.shared.base.repository.BaseRepository;
 import com.example.demo.starter.shared.base.service.impl.BaseServiceImpl;
 import com.example.demo.starter.shared.kernel.event.domain.DomainEventPublisher;
 import com.example.demo.starter.shared.util.response.ServiceResponse;
@@ -33,10 +32,5 @@ public class ArticleServiceImpl extends BaseServiceImpl<Article, ArticleDto> imp
         eventPublisher.publishAll(article.pullEvents());
 
         return ServiceResponse.success(mapper.toDto(created), 200);
-    }
-
-    @Override
-    protected void updateEntity(ArticleDto dto, Article entity) {
-        entity = mapper.toEntity(dto);
     }
 }
