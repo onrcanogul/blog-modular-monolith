@@ -9,7 +9,6 @@ import com.example.demo.starter.shared.base.service.impl.BaseServiceImpl;
 import com.example.demo.starter.shared.util.response.ServiceResponse;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -26,10 +25,10 @@ public class ProfileServiceImpl extends BaseServiceImpl<Profile, ProfileDto> imp
     }
 
     @Override
-    public ServiceResponse<List<ProfileDto>> getByUser(UUID userId) {
-        List<Profile> profiles = repository.findByUserId(userId);
-        List<ProfileDto> dtoList = profiles.stream().map(mapper::toDto).toList();
-        return ServiceResponse.success(dtoList, 200);
+    public ServiceResponse<ProfileDto> getByUser(UUID userId) {
+        Profile profile = repository.findByUserId(userId).orElseThrow();
+        ProfileDto dto = mapper.toDto(profile);
+        return ServiceResponse.success(dto, 200);
     }
 
     @Override
@@ -37,5 +36,13 @@ public class ProfileServiceImpl extends BaseServiceImpl<Profile, ProfileDto> imp
         Profile profile = Profile.create(userId);
         Profile created = repository.save(profile);
         return ServiceResponse.success(mapper.toDto(created), 200);
+    }
+
+    @Override
+    public ServiceResponse<ProfileDto> addPostCount(UUID userId) {
+        Profile profile = repository.findByUserId(userId).orElseThrow();
+        profile.addPost();
+        Profile savedProfile = repository.save(profile);
+        return ServiceResponse.success(mapper.toDto(savedProfile), 200);
     }
 }

@@ -21,7 +21,7 @@ public class ProfileController extends BaseController {
     private final ProfileService service;
 
     @GetMapping("user/{userId}")
-    public ResponseEntity<ServiceResponse<List<ProfileDto>>> getByUser(@PathVariable UUID userId) {
+    public ResponseEntity<ServiceResponse<ProfileDto>> getByUser(@PathVariable UUID userId) {
         return controllerResponse(service.getByUser(userId));
     }
 }

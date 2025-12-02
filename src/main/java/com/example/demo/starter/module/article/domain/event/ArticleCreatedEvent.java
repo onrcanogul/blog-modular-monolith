@@ -11,5 +11,5 @@ import java.util.UUID;
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
 public class ArticleCreatedEvent implements DomainEvent {
-    private UUID articleId;
+    private UUID userId;
 }
