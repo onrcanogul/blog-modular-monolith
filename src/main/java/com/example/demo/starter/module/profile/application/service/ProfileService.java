@@ -10,4 +10,5 @@ import java.util.UUID;
 
 public interface ProfileService extends BaseService<Profile, ProfileDto> {
     ServiceResponse<List<ProfileDto>> getByUser(UUID userId);
+    ServiceResponse<ProfileDto> create(UUID userId);
 }

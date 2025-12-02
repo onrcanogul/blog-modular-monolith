@@ -33,8 +33,8 @@ public class ProfileServiceImpl extends BaseServiceImpl<Profile, ProfileDto> imp
     }
 
     @Override
-    public ServiceResponse<ProfileDto> create(ProfileDto dto) {
-        Profile profile = Profile.create(dto.getUserId());
+    public ServiceResponse<ProfileDto> create(UUID userId) {
+        Profile profile = Profile.create(userId);
         Profile created = repository.save(profile);
         return ServiceResponse.success(mapper.toDto(created), 200);
     }
