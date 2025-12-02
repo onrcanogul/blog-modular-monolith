@@ -10,6 +10,7 @@ import com.example.demo.starter.module.auth.domain.entity.User;
 import com.example.demo.starter.module.auth.infrastructure.repository.RefreshTokenRepository;
 import com.example.demo.starter.module.auth.infrastructure.repository.UserRepository;
 import com.example.demo.starter.shared.exception.NotFoundException;
+import com.example.demo.starter.shared.kernel.event.domain.DomainEventPublisher;
 import com.example.demo.starter.shared.util.response.AuthResponse;
 import com.example.demo.starter.shared.util.response.ServiceResponse;
 import org.apache.coyote.BadRequestException;
@@ -33,13 +34,14 @@ public class AuthServiceImpl implements AuthService {
     private final JwtService jwtService;
     private final RefreshTokenRepository refreshTokenRepository;
     private final UserService customUserDetailsService;
+    private final DomainEventPublisher eventPublisher;
 
     public AuthServiceImpl(AuthenticationManager authManager,
                            PasswordEncoder passwordEncoder,
                            UserRepository userRepository,
                            JwtService jwtService,
                            RefreshTokenRepository refreshTokenRepository,
-                           UserService customUserDetailsService
+                           UserService customUserDetailsService, DomainEventPublisher eventPublisher
     ) {
         this.authManager = authManager;
         this.passwordEncoder = passwordEncoder;
@@ -47,6 +49,7 @@ public class AuthServiceImpl implements AuthService {
         this.jwtService = jwtService;
         this.refreshTokenRepository = refreshTokenRepository;
         this.customUserDetailsService = customUserDetailsService;
+        this.eventPublisher = eventPublisher;
     }
 
     public ServiceResponse<AuthResponse> login(LoginDto request) {
@@ -76,12 +79,9 @@ public class AuthServiceImpl implements AuthService {
         if (userRepository.findByUsername(request.getUsername()).isPresent()) {
             throw new BadRequestException("localize(badRequest.usernameAlreadyTaken)");
         }
-        User user = new User();
-        user.setRoles(List.of("USER"));
-        user.setEmail(request.getEmail());
-        user.setUsername(request.getUsername());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        User user = User.create(request.getEmail(), request.getUsername(), passwordEncoder.encode(request.getPassword()));
         userRepository.save(user);
+        eventPublisher.publishAll(user.pullEvents());
         return ServiceResponse.success("localize(Success)", 201);
     }
 

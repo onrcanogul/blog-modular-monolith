@@ -16,11 +16,17 @@ import java.util.UUID;
 @Setter
 public abstract class BaseEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
     @CreatedDate
     private Date createdDate;
     @LastModifiedDate
     private Date updatedDate;
     private boolean isDeleted;
+
+    @PrePersist
+    public void prePersist() {
+        if (id == null) {
+            id = UUID.randomUUID();
+        }
+    }
 }
