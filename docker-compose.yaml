@@ -3,16 +3,16 @@ version: '3.8'
 services:
   postgres:
     image: postgres:latest
-    container_name: postgres-db
+    container_name: postgres-blog-db
     restart: always
     environment:
-      POSTGRES_DB: demo_db
+      POSTGRES_DB: blog_db
       POSTGRES_USER: demo_user
       POSTGRES_PASSWORD: demo_pass
     ports:
       - "5432:5432"
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - blog_data:/var/lib/postgresql/data
 
 volumes:
-  pgdata:
+  blog_data:
