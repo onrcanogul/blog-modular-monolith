@@ -1,6 +1,7 @@
 package com.example.demo.starter.module.profile.domain.entity;
 
 import com.example.demo.starter.shared.kernel.domain.AggregateRoot;
+import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +10,7 @@ import lombok.Setter;
 
 import java.util.UUID;
 
+@Entity
 @Getter @Setter
 @Table(name = "profiles")
 @NoArgsConstructor @AllArgsConstructor
