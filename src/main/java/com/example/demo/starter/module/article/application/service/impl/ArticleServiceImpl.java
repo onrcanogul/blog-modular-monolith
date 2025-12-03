@@ -19,6 +19,7 @@ public class ArticleServiceImpl extends BaseServiceImpl<Article, ArticleDto> imp
     private final DomainEventPublisher eventPublisher;
     private final Mapper<Article, ArticleDto> mapper;
     private final UserService userService;
+
     public ArticleServiceImpl(ArticleRepository repository, Mapper<Article, ArticleDto> mapper, DomainEventPublisher eventPublisher, UserService userService) {
         super(repository, mapper);
         this.repository = repository;
@@ -30,7 +31,7 @@ public class ArticleServiceImpl extends BaseServiceImpl<Article, ArticleDto> imp
     @Override
     public ServiceResponse<ArticleDto> create(ArticleDto dto) {
         UUID userId = userService.getCurrentUserId();
-        Article article = Article.create(dto.getContent(), dto.getTitle(), dto.getSummary(), userId);
+        Article article = Article.create(dto.getContent(), dto.getTitle(), dto.getSummary(), userId, dto.getCategoryIds());
         Article created = repository.save(article);
         eventPublisher.publishAll(article.pullEvents());
         return ServiceResponse.success(mapper.toDto(created), 200);
